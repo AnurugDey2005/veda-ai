@@ -1,206 +1,926 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>∫AI - Integrate AI</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VEDA | Cosmic Intelligence</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-top: #0a1f44;
+      --bg-bottom: #020617;
+      --bg-surface: rgba(6, 18, 43, 0.72);
+      --border: rgba(191, 219, 254, 0.16);
+      --border-strong: rgba(96, 165, 250, 0.35);
+      --text-primary: #f8fbff;
+      --text-secondary: rgba(226, 232, 240, 0.78);
+      --text-muted: rgba(191, 219, 254, 0.6);
+      --accent: #60a5fa;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --shadow: 0 24px 80px rgba(2, 8, 23, 0.45);
+      --radius-xl: 28px;
+      --font-ui: "Space Grotesk", "Inter", system-ui, -apple-system, sans-serif;
+      --font-display: "Playfair Display", "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      font-family: Arial;
-      background: radial-gradient(circle at top, #0a1f44, #020617);
-      color: white;
-      text-align: center;
+      min-height: 100vh;
+      font-family: var(--font-ui);
+      color: var(--text-primary);
+      background:
+        radial-gradient(circle at 10% 12%, rgba(96, 165, 250, 0.26), transparent 34%),
+        radial-gradient(circle at 90% 10%, rgba(125, 211, 252, 0.2), transparent 32%),
+        radial-gradient(circle at 14% 85%, rgba(59, 130, 246, 0.18), transparent 32%),
+        radial-gradient(ellipse at 50% 52%, rgba(5, 12, 32, 0.95), rgba(2, 6, 23, 1)),
+        linear-gradient(180deg, #0c2147, #010513 38%, #010310 100%);
+      overflow-x: hidden;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(0,0,0); }
+      to { transform: translate3d(-10px, -6px, 0); }
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(60px);
+      opacity: 0.6;
+    }
+
+    body::before {
+      top: -120px;
+      left: -80px;
+      width: 320px;
+      height: 320px;
+      background: rgba(59, 130, 246, 0.18);
+    }
+
+    body::after {
+      inset: 0;
+      background-image:
+        radial-gradient(2.2px 2.2px at 14% 16%, rgba(255, 255, 255, 0.9), transparent 54%),
+        radial-gradient(1.6px 1.6px at 26% 68%, rgba(255, 255, 255, 0.8), transparent 56%),
+        radial-gradient(2.8px 2.8px at 78% 22%, rgba(255, 255, 255, 0.95), transparent 58%),
+        radial-gradient(1.2px 1.2px at 64% 52%, rgba(255, 255, 255, 0.7), transparent 55%),
+        radial-gradient(1.9px 1.9px at 88% 60%, rgba(255, 255, 255, 0.85), transparent 60%),
+        radial-gradient(1px 1px at 16% 82%, rgba(255, 255, 255, 0.7), transparent 60%),
+        radial-gradient(3px 3px at 52% 48%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(4px 4px at 46% 42%, rgba(255, 255, 255, 0.4), transparent 65%);
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
+      opacity: 0.8;
+      animation: drift 22s ease-in-out infinite alternate;
+    }
+
+    button, input, textarea { font: inherit; }
+    .hidden { display: none !important; }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .glass {
+      background: rgba(6, 18, 43, 0.72);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
     }
 
     #splash {
       position: fixed;
-      width: 100%;
-      height: 100%;
-      background: #020617;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      animation: fadeOut 2s ease forwards;
-      animation-delay: 2s;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(96, 165, 250, 0.16), transparent 20%),
+        linear-gradient(180deg, #07162f, #020617);
+      animation: splash-fade 0.9s ease forwards;
+      animation-delay: 2.2s;
     }
 
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
+    .splash-mark {
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+      text-align: center;
+      animation: splash-rise 1.8s ease;
+    }
+
+    .logo-box, .brand-mark {
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      background: linear-gradient(145deg, rgba(37, 99, 235, 0.35), rgba(30, 41, 59, 0.9));
+      border: 1px solid rgba(191, 219, 254, 0.2);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset, 0 0 70px rgba(37, 99, 235, 0.24);
     }
 
     .logo-box {
-      background: #0a1f44;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 40px #1e3a8a;
-      font-size: 50px;
+      width: 126px;
+      height: 126px;
+      border-radius: 30px;
+      font-size: 54px;
     }
 
-    .container {
-      margin-top: 120px;
-    }
-
-    input, select {
-      width: 60%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      margin: 10px;
-      background: rgba(255,255,255,0.1);
-      color: white;
-      backdrop-filter: blur(10px);
-    }
-
-    button {
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: none;
-      background: linear-gradient(45deg, #2563eb, #1e3a8a);
-      color: white;
-      cursor: pointer;
-    }
-
-    #output {
-      margin-top: 30px;
-      padding: 20px;
-      width: 70%;
-      margin-left: auto;
-      margin-right: auto;
-      background: rgba(255,255,255,0.05);
+    .brand-mark {
+      width: 46px;
+      height: 46px;
       border-radius: 16px;
-      backdrop-filter: blur(12px);
+      font-size: 1.35rem;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.22);
     }
 
-    .loader {
-      border: 4px solid rgba(255,255,255,0.1);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      margin: auto;
-      animation: spin 1s linear infinite;
+    .splash-copy, .helper-text, .field-hint, .response-meta, .mode-description, .empty-copy, footer, .brand-copy span, .topbar-status {
+      color: var(--text-secondary);
     }
 
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
+    .splash-copy {
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
     }
 
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      font-size: 12px;
-      opacity: 0.7;
+    @keyframes splash-rise {
+      from { opacity: 0; transform: translateY(26px) scale(0.9); filter: blur(6px); }
+      60% { filter: blur(0px); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    @keyframes splash-fade { to { opacity: 0; visibility: hidden; } }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(96, 165, 250, 0); } 100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .topbar, .workspace-header, .result-header, footer {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .topbar { padding: 18px 22px; border-radius: 999px; margin-bottom: 28px; }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-copy { display: grid; gap: 2px; }
+    .brand-copy strong, .hero-copy h1 { font-family: var(--font-display); font-weight: 600; }
+    .topbar-status { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; white-space: nowrap; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--success); box-shadow: 0 0 18px rgba(52, 211, 153, 0.6); }
+
+    .hero, .workspace-grid { display: grid; gap: 24px; align-items: start; }
+    .hero { grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); margin-bottom: 24px; }
+    .workspace-grid { grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr); }
+
+    .hero-card, .workspace, .result-panel, .insight-card, .model-card, .empty-state, .section-card, .token-card { border-radius: var(--radius-xl); }
+    .hero-card, .workspace, .result-panel { padding: 28px; }
+    .hero-card { position: relative; overflow: hidden; }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -45% 25%;
+      height: 220px;
+      background: radial-gradient(circle, rgba(96, 165, 250, 0.22), transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero-copy { position: relative; z-index: 1; max-width: 640px; }
+    .eyebrow, .pulse-badge, .response-tag, .chip { border-radius: 999px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
+      background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.16);
+      color: #dbeafe; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    .hero-copy h1 { margin: 18px 0 14px; font-size: clamp(2.6rem, 5vw, 4.7rem); line-height: 0.98; letter-spacing: -0.04em; }
+
+    .hero-copy p, .workspace-header p, .result-header p, .token-card p, .insight-card p, .model-card p, .model-card li, .section-card p {
+      margin: 0; line-height: 1.7;
+    }
+
+    .hero-metrics, .stack-list, .mode-grid, .results-stack, .model-grid, .insight-grid { display: grid; gap: 14px; }
+    .hero-metrics { margin-top: 26px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .mode-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 18px; }
+    .insight-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 18px; }
+
+    .metric, .stack-item, .token-card, .insight-card, .model-card, .empty-state, .section-card {
+      padding: 18px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(191, 219, 254, 0.08);
+    }
+    .metric strong, .stack-item strong, .insight-card strong { display: block; margin-bottom: 8px; }
+    .metric span, .stack-item small, .char-count { color: var(--text-muted); }
+
+    .pulse-badge {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(96, 165, 250, 0.18);
+      font-size: 0.88rem; color: #dbeafe; white-space: nowrap;
+    }
+    .pulse-badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.55); animation: pulse 2s infinite; }
+
+    .mode-card, textarea, input[type="password"], .ghost-button, .primary-button, .secondary-button, .chip {
+      transition: transform 160ms ease, opacity 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .mode-card {
+      padding: 18px; border-radius: 20px; border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03); color: var(--text-primary); cursor: pointer;
+    }
+    .mode-card:hover, .ghost-button:hover, .secondary-button:hover, .chip:hover, .primary-button:hover { transform: translateY(-1px); }
+    .mode-card:hover { border-color: rgba(147, 197, 253, 0.4); background: rgba(255, 255, 255, 0.05); }
+    .mode-card.active {
+      background: linear-gradient(180deg, rgba(96, 165, 250, 0.14), rgba(15, 23, 42, 0.82));
+      border-color: var(--border-strong); box-shadow: 0 18px 34px rgba(15, 23, 42, 0.34);
+    }
+    .mode-card strong { display: block; margin-bottom: 8px; }
+
+    .field { display: grid; gap: 10px; margin-top: 18px; }
+    .field label { font-size: 0.92rem; color: #dbeafe; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    textarea, input[type="password"] {
+      width: 100%; border: 1px solid rgba(191, 219, 254, 0.12);
+      background: rgba(255, 255, 255, 0.04); color: var(--text-primary);
+      border-radius: 20px; outline: none;
+    }
+    textarea { min-height: 180px; resize: vertical; padding: 18px 18px 54px; }
+    input[type="password"] { padding: 14px 16px; }
+
+    textarea:focus, input[type="password"]:focus {
+      border-color: rgba(96, 165, 250, 0.5); background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.08);
+    }
+    textarea::placeholder, input[type="password"]::placeholder { color: rgba(191, 219, 254, 0.42); }
+
+    .textarea-wrap { position: relative; }
+
+    .textarea-tools, .helper-row, .chips, .action-row, .token-row, .response-meta, .status-banner {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .textarea-tools { position: absolute; right: 14px; bottom: 14px; }
+    .helper-row { justify-content: space-between; margin-top: 16px; }
+    .action-row { margin-top: 22px; }
+    .token-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; margin-top: 14px; }
+
+    .ghost-button, .secondary-button, .chip {
+      background: rgba(255, 255, 255, 0.05); color: var(--text-primary); border: 1px solid rgba(191, 219, 254, 0.14);
+    }
+    .ghost-button, .chip, .primary-button, .secondary-button { padding: 12px 14px; border-radius: 16px; cursor: pointer; }
+
+    .primary-button {
+      background: linear-gradient(135deg, #60a5fa, #2563eb 60%, #1d4ed8);
+      color: white; border: 0; box-shadow: 0 16px 30px rgba(37, 99, 235, 0.28); font-weight: 600;
+    }
+    .secondary-button {
+      background: rgba(15, 23, 42, 0.86); color: #dbeafe; border: 1px solid rgba(96, 165, 250, 0.24); font-weight: 600;
+    }
+    .primary-button:disabled, .secondary-button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .status-banner {
+      display: none; padding: 14px 16px; border-radius: 18px;
+      background: rgba(96, 165, 250, 0.08); border: 1px solid rgba(96, 165, 250, 0.18); color: #dbeafe;
+    }
+    .status-banner.visible { display: flex; }
+    .status-spinner { width: 18px; height: 18px; border: 2px solid rgba(255, 255, 255, 0.2); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; flex: 0 0 auto; }
+
+    .empty-state { text-align: left; }
+    .empty-state strong { font-size: 1.02rem; }
+    .section-card p { color: #eef6ff; white-space: pre-wrap; }
+    .response-meta { margin-top: 12px; font-size: 0.86rem; }
+    .response-tag { padding: 8px 12px; background: rgba(15, 23, 42, 0.86); border: 1px solid rgba(191, 219, 254, 0.08); }
+
+    .verdict { padding: 16px 18px; border-radius: 20px; font-weight: 600; }
+    .verdict.success { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.24); color: #d1fae5; }
+    .verdict.warning { background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.24); color: #fef3c7; }
+
+    .model-card ul { margin: 14px 0 0; padding-left: 18px; }
+    .model-card li + li { margin-top: 6px; }
+
+    footer { margin-top: 28px; padding: 0 6px; font-size: 0.88rem; }
+
+    @media (max-width: 1024px) {
+      .hero, .workspace-grid, .hero-metrics, .mode-grid, .insight-grid { grid-template-columns: 1fr; }
+      .topbar { border-radius: 28px; }
+    }
+
+    @media (max-width: 720px) {
+      .app-shell { width: min(100% - 18px, 100%); padding-top: 14px; }
+      .topbar, .workspace-header, .result-header, footer { flex-direction: column; align-items: flex-start; }
+      .token-row { grid-template-columns: 1fr; }
+      .action-row { flex-direction: column; align-items: stretch; }
+      .primary-button, .secondary-button { width: 100%; }
+      .hero-copy h1 { font-size: 2.6rem; }
     }
   </style>
 </head>
-
 <body>
+  <div id="splash">
+    <div class="splash-mark">
+      <div class="logo-box">V</div>
+      <div class="splash-copy">VEDA</div>
+    </div>
+  </div>
 
-<div id="splash">
-  <div class="logo-box">∫AI</div>
-</div>
+  <div class="app-shell">
+    <header class="topbar glass">
+      <div class="brand">
+        <div class="brand-mark">V</div>
+        <div class="brand-copy">
+          <strong>VEDA</strong>
+          <span>Powered by VEDA Engine</span>
+        </div>
+      </div>
+      <div class="topbar-status">
+        <span class="status-dot"></span>
+        <span>VEDA live: multi-model orchestration ready</span>
+      </div>
+    </header>
 
-<div class="container">
-  <h1>∫AI</h1>
+    <section class="hero">
+      <article class="hero-card glass">
+        <div class="hero-copy">
+          <div class="eyebrow">VEDA for the curious</div>
+          <h1>VEDA unifies expert models so learners get clear, exam-ready answers.</h1>
+          <p>
+            Built for students and deep thinkers: VEDA listens, orchestrates multiple AIs in parallel,
+            then distills the most reliable synthesis. When you feel stuck, come here first—and leave understanding, not guessing.
+          </p>
+          <div class="hero-metrics">
+            <div class="metric">
+              <strong>3 modes</strong>
+              <span>Smart, Compare, Verify — tuned for different intents</span>
+            </div>
+            <div class="metric">
+              <strong>Speed-first</strong>
+              <span>Parallel inference + quick merge heuristic</span>
+            </div>
+            <div class="metric">
+              <strong>Confidence-aware</strong>
+              <span>Overlap scoring to spotlight agreement vs conflict</span>
+            </div>
+          </div>
+        </div>
+      </article>
 
-  <select id="mode">
-    <option value="smart">Smart Answer</option>
-    <option value="compare">Compare</option>
-    <option value="verify">Verify</option>
-  </select>
+      <aside class="hero-card glass">
+        <div>
+          <h2>VEDA Field Notes</h2>
+          <p class="helper-text">
+            Built as a premium-facing layer: steady UX, mode-aware prompts, graceful fallbacks, and synthesis tuned for clarity and trust.
+          </p>
+        </div>
+        <div class="stack-list">
+          <div class="stack-item">
+            <strong>Smart Answer</strong>
+            <small>Concise merge with light deduplication for decision-ready responses.</small>
+          </div>
+          <div class="stack-item">
+            <strong>Compare</strong>
+            <small>Side-by-side model voices for transparent evaluation.</small>
+          </div>
+          <div class="stack-item">
+            <strong>Verify</strong>
+            <small>Agreement scoring, conflict surfacing, and cautious summaries.</small>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-  <br>
+    <section class="workspace-grid">
+      <main class="workspace glass">
+        <div class="workspace-header">
+          <div>
+            <h2>Ask VEDA</h2>
+            <p class="helper-text">
+              Ask, pick a mode, and VEDA will orchestrate multiple models in parallel, then return a calm, high-signal answer.
+            </p>
+          </div>
+          <div class="pulse-badge">Live orchestration preview</div>
+        </div>
 
-  <input id="question" placeholder="Ask anything..." />
-  <br>
+        <div class="mode-grid" id="modeGrid">
+          <button class="mode-card active" type="button" data-mode="smart">
+            <strong>Smart Answer</strong>
+            <span>Synthesize responses into one polished answer with clarity and flow.</span>
+          </button>
+          <button class="mode-card" type="button" data-mode="compare">
+            <strong>Compare</strong>
+            <span>Inspect each model’s output separately before deciding what to trust.</span>
+          </button>
+          <button class="mode-card" type="button" data-mode="verify">
+            <strong>Verify</strong>
+            <span>Check for agreement, surface conflicts, and produce a safer summary.</span>
+          </button>
+        </div>
 
-  <button onclick="askAI()">Ask</button>
+        <div class="mode-description helper-text" id="modeDescription">
+          Smart Answer combines multiple model responses into a cleaner, single final answer.
+        </div>
 
-  <div id="output"></div>
-</div>
+        <div class="field">
+          <label for="question">Prompt</label>
+          <div class="textarea-wrap">
+            <textarea id="question" placeholder="Ask a question, describe a problem, or request a decision-ready answer..."></textarea>
+            <div class="textarea-tools">
+              <span class="char-count" id="charCount">0 characters</span>
+              <button class="ghost-button" type="button" id="clearPrompt">Clear</button>
+            </div>
+          </div>
+          <div class="helper-row">
+            <div class="field-hint">Tip: detailed prompts produce better synthesis and verification.</div>
+            <div class="chips">
+              <button class="chip" type="button" data-prompt="Compare the best pricing strategy for an AI SaaS product targeting freelancers versus small teams.">Pricing strategy</button>
+              <button class="chip" type="button" data-prompt="Verify whether a landing page claiming faster AI answers should prioritize trust, speed, or transparency in the hero section.">Landing page verify</button>
+              <button class="chip" type="button" data-prompt="Create a concise but premium launch plan for a multi-model AI assistant product entering the market with limited budget.">Launch plan</button>
+            </div>
+          </div>
+        </div>
 
-<footer>
-© 2026 Integrate AI — Powered by ∫AI Engine
-</footer>
+        <div class="token-card">
+          <h3>Model Access Token</h3>
+          <p>
+            Add your private inference token to improve reliability with rate-limited model endpoints.
+            The token stays in your browser only and is not hardcoded into the page.
+          </p>
+          <div class="token-row">
+            <input id="hfToken" type="password" placeholder="hf_..." autocomplete="off">
+            <button class="secondary-button" type="button" id="saveToken">Save Token</button>
+            <button class="ghost-button" type="button" id="clearToken">Remove</button>
+          </div>
+          <div class="field-hint" id="tokenStatus">No token saved. Public requests may be slower or fail depending on model availability.</div>
+        </div>
 
-<script>
-function extractText(data) {
-  if (Array.isArray(data) && data[0]?.generated_text) {
-    return data[0].generated_text;
-  }
-  if (Array.isArray(data) && data[0]?.summary_text) {
-    return data[0].summary_text;
-  }
-  return JSON.stringify(data);
-}
+        <div class="action-row">
+          <button class="primary-button" type="button" id="askButton">Generate Answer</button>
+          <button class="secondary-button" type="button" id="stopButton" disabled>Stop Request</button>
+          <span class="helper-text">VEDA stack: flan-t5-base + bart-large-cnn (parallel)</span>
+        </div>
+      </main>
 
-function mergeAnswers(a, b) {
-  if (!a) return b;
-  if (!b) return a;
+      <aside class="result-panel glass">
+        <div class="result-header">
+          <div>
+            <h2>Response Workspace</h2>
+            <p class="helper-text">
+              Final synthesis, model-by-model outputs, and verification signals appear here with clearer structure and faster scanning.
+            </p>
+          </div>
+        </div>
 
-  return a.length > b.length
-    ? a + "\\n\\n[Enhanced]\\n" + b
-    : b + "\\n\\n[Enhanced]\\n" + a;
-}
+        <div class="results-stack">
+          <div class="status-banner" id="statusBanner">
+            <div class="status-spinner"></div>
+            <span id="statusText">VEDA is orchestrating models and merging results...</span>
+          </div>
 
-async function askAI() {
-  let q = document.getElementById("question").value;
-  let mode = document.getElementById("mode").value;
-  let output = document.getElementById("output");
+          <div class="empty-state" id="emptyState">
+            <strong>Ready when you are.</strong>
+            <div class="empty-copy">
+              Choose a mode, ask a meaningful question, and the answer panel will render a premium multi-AI result instead of raw JSON.
+            </div>
+          </div>
 
-  if (!q) return;
+          <div id="resultContent" class="hidden"></div>
+        </div>
 
-  output.innerHTML = "<div class='loader'></div>";
+        <div class="insight-grid">
+          <div class="insight-card">
+            <strong>Monetization-ready direction</strong>
+            <p>Position free usage around daily limits, then gate compare and verify depth inside Pro and Team tiers.</p>
+          </div>
+          <div class="insight-card">
+            <strong>Backend path</strong>
+            <p>Move model calls behind a serverless route next, then add provider routing, caching, logging, and quotas.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-  try {
-    let [res1, res2] = await Promise.all([
-      fetch("https://api-inference.huggingface.co/models/google/flan-t5-base", {
+    <footer>
+      <span>© 2026 VEDA. All rights reserved.</span>
+      <span>Powered by VEDA Engine</span>
+    </footer>
+  </div>
+
+  <script>
+    const APP_STATE = {
+      mode: "smart",
+      requestController: null,
+      tokenStorageKey: "veda-hf-token",
+      prompts: {
+        smart: "Provide the most useful answer to this user request. Be concise, accurate, and practical.",
+        compare: "Answer the user request clearly. Preserve the core reasoning so it can be compared against another model.",
+        verify: "Analyze the user request carefully and answer with explicit reasoning that can be checked for agreement or conflict."
+      },
+      modes: {
+        smart: {
+          label: "Smart Answer",
+          description: "Smart Answer combines multiple model responses into a cleaner, single final answer."
+        },
+        compare: {
+          label: "Compare",
+          description: "Compare keeps each model response visible so users can inspect differences directly."
+        },
+        verify: {
+          label: "Verify",
+          description: "Verify measures overlap and conflict signals, then produces a more cautious final summary."
+        }
+      },
+      models: [
+        {
+          name: "google/flan-t5-base",
+          provider: "Hugging Face",
+          endpoint: "https://api-inference.huggingface.co/models/google/flan-t5-base"
+        },
+        {
+          name: "facebook/bart-large-cnn",
+          provider: "Hugging Face",
+          endpoint: "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+        }
+      ]
+    };
+
+    const elements = {
+      modeGrid: document.getElementById("modeGrid"),
+      modeDescription: document.getElementById("modeDescription"),
+      question: document.getElementById("question"),
+      charCount: document.getElementById("charCount"),
+      clearPrompt: document.getElementById("clearPrompt"),
+      askButton: document.getElementById("askButton"),
+      stopButton: document.getElementById("stopButton"),
+      statusBanner: document.getElementById("statusBanner"),
+      statusText: document.getElementById("statusText"),
+      emptyState: document.getElementById("emptyState"),
+      resultContent: document.getElementById("resultContent"),
+      hfToken: document.getElementById("hfToken"),
+      saveToken: document.getElementById("saveToken"),
+      clearToken: document.getElementById("clearToken"),
+      tokenStatus: document.getElementById("tokenStatus")
+    };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function normalizeWhitespace(text) {
+      return text.replace(/\s+/g, " ").trim();
+    }
+
+    function splitSentences(text) {
+      return normalizeWhitespace(text)
+        .split(/(?<=[.!?])\s+/)
+        .map((sentence) => sentence.trim())
+        .filter(Boolean);
+    }
+
+    function uniqueSentences(sentences) {
+      const seen = new Set();
+      return sentences.filter((sentence) => {
+        const key = sentence.toLowerCase();
+        if (seen.has(key)) {
+          return false;
+        }
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function scoreOverlap(a, b) {
+      const tokensA = new Set(a.toLowerCase().split(/\W+/).filter((word) => word.length > 3));
+      const tokensB = new Set(b.toLowerCase().split(/\W+/).filter((word) => word.length > 3));
+
+      if (!tokensA.size || !tokensB.size) {
+        return 0;
+      }
+
+      let common = 0;
+      tokensA.forEach((word) => {
+        if (tokensB.has(word)) {
+          common += 1;
+        }
+      });
+
+      return common / Math.max(tokensA.size, tokensB.size);
+    }
+
+    function extractText(data) {
+      if (!data) return "";
+      if (typeof data === "string") return normalizeWhitespace(data);
+
+      if (Array.isArray(data)) {
+        const item = data[0];
+        if (!item) return "";
+        if (typeof item === "string") return normalizeWhitespace(item);
+        if (item.generated_text) return normalizeWhitespace(item.generated_text);
+        if (item.summary_text) return normalizeWhitespace(item.summary_text);
+        if (item.answer) return normalizeWhitespace(item.answer);
+      }
+
+      if (data.generated_text) return normalizeWhitespace(data.generated_text);
+      if (data.summary_text) return normalizeWhitespace(data.summary_text);
+      if (data.answer) return normalizeWhitespace(data.answer);
+      if (data.error) return "";
+      return normalizeWhitespace(JSON.stringify(data));
+    }
+
+    function getModePrompt(mode, question) {
+      return `${APP_STATE.prompts[mode]}\n\nUser request:\n${question}`;
+    }
+
+    function getStoredToken() {
+      return window.localStorage.getItem(APP_STATE.tokenStorageKey) || "";
+    }
+
+    function updateTokenStatus() {
+      const token = getStoredToken();
+      if (token) {
+        const preview = `${token.slice(0, 4)}••••${token.slice(-3)}`;
+        elements.tokenStatus.textContent = `Token saved locally: ${preview}. This should improve inference reliability.`;
+        elements.hfToken.value = token;
+      } else {
+        elements.tokenStatus.textContent = "No token saved. Public requests may be slower or fail depending on model availability.";
+        elements.hfToken.value = "";
+      }
+    }
+
+    function setMode(mode) {
+      APP_STATE.mode = mode;
+      elements.modeDescription.textContent = APP_STATE.modes[mode].description;
+      document.querySelectorAll(".mode-card").forEach((button) => {
+        button.classList.toggle("active", button.dataset.mode === mode);
+      });
+    }
+
+    function updateCharCount() {
+      const count = elements.question.value.trim().length;
+      elements.charCount.textContent = `${count} character${count === 1 ? "" : "s"}`;
+    }
+
+    function showStatus(message) {
+      elements.statusText.textContent = message;
+      elements.statusBanner.classList.add("visible");
+    }
+
+    function hideStatus() {
+      elements.statusBanner.classList.remove("visible");
+    }
+
+    function setBusy(isBusy) {
+      elements.askButton.disabled = isBusy;
+      elements.stopButton.disabled = !isBusy;
+      elements.question.disabled = isBusy;
+    }
+
+    async function callModel(model, prompt, signal) {
+      const token = getStoredToken();
+      const headers = { "Content-Type": "application/json" };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const response = await fetch(model.endpoint, {
         method: "POST",
-        body: JSON.stringify({ inputs: q })
-      }),
-      fetch("https://api-inference.huggingface.co/models/facebook/bart-large-cnn", {
-        method: "POST",
-        body: JSON.stringify({ inputs: q })
-      })
-    ]);
+        headers,
+        body: JSON.stringify({
+          inputs: prompt,
+          options: { wait_for_model: true, use_cache: false }
+        }),
+        signal
+      });
 
-    let data1 = await res1.json();
-    let data2 = await res2.json();
+      const data = await response.json();
+      if (!response.ok) {
+        const errorText = data && data.error ? data.error : `HTTP ${response.status}`;
+        throw new Error(`${model.name}: ${errorText}`);
+      }
 
-    let text1 = extractText(data1);
-    let text2 = extractText(data2);
-    let finalAnswer = mergeAnswers(text1, text2);
+      const text = extractText(data);
+      if (!text) {
+        const fallbackError = data && data.error ? data.error : "Model returned an empty response.";
+        throw new Error(`${model.name}: ${fallbackError}`);
+      }
 
-    if (mode === "compare") {
-      output.innerHTML = `
-        <h3>⚖️ Comparison</h3>
-        <p><b>Model A:</b> ${text1}</p>
-        <p><b>Model B:</b> ${text2}</p>
-      `;
+      return { model, text };
     }
 
-    else if (mode === "verify") {
-      let verdict = (text1 === text2) ? "✅ Both agree" : "⚠️ Possible conflict";
+    function buildSynthesis(textA, textB) {
+      const primarySentences = splitSentences(textA);
+      const secondarySentences = splitSentences(textB);
+      const overlap = scoreOverlap(textA, textB);
+      const shared = [];
+      const uniquePrimary = [];
+      const uniqueSecondary = [];
 
-      output.innerHTML = `
-        <h3>🔍 Verification</h3>
-        <p>${verdict}</p>
-        <p>${finalAnswer}</p>
-      `;
+      primarySentences.forEach((sentence) => {
+        const related = secondarySentences.some((other) => scoreOverlap(sentence, other) >= 0.45);
+        if (related) shared.push(sentence);
+        else uniquePrimary.push(sentence);
+      });
+
+      secondarySentences.forEach((sentence) => {
+        const related = primarySentences.some((other) => scoreOverlap(sentence, other) >= 0.45);
+        if (!related) uniqueSecondary.push(sentence);
+      });
+
+      const sharedSummary = uniqueSentences(shared).slice(0, 3);
+      const additionalSupport = uniqueSentences([...uniquePrimary, ...uniqueSecondary]).slice(0, 4);
+      const finalAnswer = [...sharedSummary, ...additionalSupport].join(" ").trim() || textA || textB;
+
+      const dispersionPenalty = Math.max(uniquePrimary.length, uniqueSecondary.length) > 6 ? 0.15 : 0;
+      const score = Math.max(1, Math.min(10, (overlap * 8.5) + 1.2 - dispersionPenalty));
+
+      return {
+        finalAnswer,
+        overlap,
+        score,
+        sharedSummary,
+        uniquePrimary: uniqueSentences(uniquePrimary).slice(0, 3),
+        uniqueSecondary: uniqueSentences(uniqueSecondary).slice(0, 3)
+      };
     }
 
-    else {
-      output.innerHTML = `
-        <h3>🧠 Smart Answer</h3>
-        <p>${finalAnswer}</p>
-      `;
+    function getVerifyVerdict(overlap, differences) {
+      if (overlap >= 0.55 && differences <= 2) {
+        return { tone: "success", label: "Strong agreement detected across model outputs." };
+      }
+      return { tone: "warning", label: "Partial conflict detected. Treat the final answer as directional rather than fully verified." };
     }
 
-  } catch (err) {
-    output.innerHTML = "Error fetching AI response.";
-  }
-}
-</script>
+    function renderResponse(result) {
+      const { mode, synthesis, outputs, latencyMs } = result;
+      const modeLabel = APP_STATE.modes[mode].label;
+      const blocks = [];
+      blocks.push(`
+        <section class="section-card">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+            <div>
+              <h3>${escapeHtml(modeLabel)} Final Answer</h3>
+            </div>
+            <div class="response-tag" style="margin-left:auto;">Relevance score: ${synthesis.score.toFixed(1)}/10</div>
+          </div>
+          <p>${escapeHtml(synthesis.finalAnswer)}</p>
+          <div class="response-meta">
+            <span class="response-tag">Latency: ${latencyMs} ms</span>
+            <span class="response-tag">Agreement score: ${(synthesis.overlap * 100).toFixed(0)}%</span>
+            <span class="response-tag">${outputs.length} model responses</span>
+          </div>
+        </section>
+      `);
 
+      if (mode === "verify") {
+        const verdict = getVerifyVerdict(synthesis.overlap, synthesis.uniquePrimary.length + synthesis.uniqueSecondary.length);
+        blocks.push(`<section class="verdict ${verdict.tone}">${escapeHtml(verdict.label)}</section>`);
+      }
+
+      if (synthesis.sharedSummary.length) {
+        blocks.push(`
+          <section class="section-card">
+            <h3>Shared Signals</h3>
+            <p>${escapeHtml(synthesis.sharedSummary.join(" "))}</p>
+          </section>
+        `);
+      }
+
+      if (mode === "compare" || mode === "verify") {
+        const compareText = [
+          synthesis.uniquePrimary.length ? `Model A adds: ${synthesis.uniquePrimary.join(" ")}` : "Model A is closely aligned with the second model.",
+          synthesis.uniqueSecondary.length ? `Model B adds: ${synthesis.uniqueSecondary.join(" ")}` : "Model B is closely aligned with the first model."
+        ].join(" ");
+
+        blocks.push(`
+          <section class="section-card">
+            <h3>Comparison Highlights</h3>
+            <p>${escapeHtml(compareText)}</p>
+          </section>
+        `);
+      }
+
+      blocks.push(`
+        <section class="model-grid">
+          ${outputs.map((output, index) => `
+            <article class="model-card">
+              <h3>Model ${index + 1}: ${escapeHtml(output.model.name)}</h3>
+              <details>
+                <summary style="cursor:pointer;color:#dbeafe;">Show answer</summary>
+                <p>${escapeHtml(output.text)}</p>
+              </details>
+              <ul>
+                <li>Provider: ${escapeHtml(output.model.provider)}</li>
+                <li>Response length: ${output.text.length} characters</li>
+                <li>Role in merge: ${index === 0 ? "Primary reference" : "Secondary support"}</li>
+              </ul>
+            </article>
+          `).join("")}
+        </section>
+      `);
+
+      elements.resultContent.innerHTML = blocks.join("");
+      elements.emptyState.classList.add("hidden");
+      elements.resultContent.classList.remove("hidden");
+    }
+
+    function renderError(message) {
+      elements.resultContent.innerHTML = `
+        <section class="section-card">
+          <h3>Request Error</h3>
+          <p>${escapeHtml(message)}</p>
+          <div class="response-meta">
+            <span class="response-tag">Check your Hugging Face token if the model is rate-limited.</span>
+          </div>
+        </section>
+      `;
+      elements.emptyState.classList.add("hidden");
+      elements.resultContent.classList.remove("hidden");
+    }
+
+    async function askAI() {
+      const question = elements.question.value.trim();
+      if (!question) {
+        renderError("Enter a prompt before generating an answer.");
+        return;
+      }
+
+      if (APP_STATE.requestController) APP_STATE.requestController.abort();
+      const controller = new AbortController();
+      APP_STATE.requestController = controller;
+      const startedAt = performance.now();
+      const prompt = getModePrompt(APP_STATE.mode, question);
+
+      setBusy(true);
+      showStatus("Contacting models and building a merged answer...");
+      elements.resultContent.classList.add("hidden");
+      elements.emptyState.classList.add("hidden");
+
+      try {
+        const outputs = await Promise.all(APP_STATE.models.map((model) => callModel(model, prompt, controller.signal)));
+        const synthesis = buildSynthesis(outputs[0].text, outputs[1].text);
+        const latencyMs = Math.round(performance.now() - startedAt);
+        renderResponse({ mode: APP_STATE.mode, outputs, synthesis, latencyMs });
+        hideStatus();
+      } catch (error) {
+        hideStatus();
+        if (error.name === "AbortError") renderError("The active request was stopped before completion.");
+        else renderError(error.message || "Something went wrong while fetching the AI response.");
+      } finally {
+        setBusy(false);
+        APP_STATE.requestController = null;
+      }
+    }
+
+    elements.modeGrid.addEventListener("click", (event) => {
+      const button = event.target.closest(".mode-card");
+      if (button) setMode(button.dataset.mode);
+    });
+
+    elements.question.addEventListener("input", updateCharCount);
+    elements.clearPrompt.addEventListener("click", () => {
+      elements.question.value = "";
+      updateCharCount();
+      elements.question.focus();
+    });
+
+    elements.askButton.addEventListener("click", askAI);
+    elements.stopButton.addEventListener("click", () => {
+      if (APP_STATE.requestController) APP_STATE.requestController.abort();
+    });
+
+    elements.question.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter" && !elements.askButton.disabled) askAI();
+    });
+
+    document.querySelectorAll(".chip").forEach((button) => {
+      button.addEventListener("click", () => {
+        elements.question.value = button.dataset.prompt;
+        updateCharCount();
+        elements.question.focus();
+      });
+    });
+
+    elements.saveToken.addEventListener("click", () => {
+      const token = elements.hfToken.value.trim();
+      if (!token) window.localStorage.removeItem(APP_STATE.tokenStorageKey);
+      else window.localStorage.setItem(APP_STATE.tokenStorageKey, token);
+      updateTokenStatus();
+    });
+
+    elements.clearToken.addEventListener("click", () => {
+      window.localStorage.removeItem(APP_STATE.tokenStorageKey);
+      updateTokenStatus();
+    });
+
+    setMode(APP_STATE.mode);
+    updateCharCount();
+    updateTokenStatus();
+  </script>
 </body>
 </html>
