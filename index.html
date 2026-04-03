@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VEDA | Cosmic Intelligence</title>
+  <title>Veda | Cosmic Intelligence</title>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-top: #0a1f44;
-      --bg-bottom: #020617;
+      --bg-top: #081736;
+      --bg-bottom: #000614;
       --bg-surface: rgba(6, 18, 43, 0.72);
       --border: rgba(191, 219, 254, 0.16);
       --border-strong: rgba(96, 165, 250, 0.35);
@@ -24,7 +26,7 @@
       --shadow: 0 24px 80px rgba(2, 8, 23, 0.45);
       --radius-xl: 28px;
       --font-ui: "Space Grotesk", "Inter", system-ui, -apple-system, sans-serif;
-      --font-display: "Playfair Display", "Times New Roman", serif;
+      --font-display: "Cormorant Garamond", "Playfair Display", serif;
     }
 
     * { box-sizing: border-box; }
@@ -36,18 +38,42 @@
       font-family: var(--font-ui);
       color: var(--text-primary);
       background:
-        radial-gradient(circle at 10% 12%, rgba(96, 165, 250, 0.26), transparent 34%),
-        radial-gradient(circle at 90% 10%, rgba(125, 211, 252, 0.2), transparent 32%),
-        radial-gradient(circle at 14% 85%, rgba(59, 130, 246, 0.18), transparent 32%),
-        radial-gradient(ellipse at 50% 52%, rgba(5, 12, 32, 0.95), rgba(2, 6, 23, 1)),
-        linear-gradient(180deg, #0c2147, #010513 38%, #010310 100%);
+        radial-gradient(circle at 10% 12%, rgba(96, 165, 250, 0.22), transparent 34%),
+        radial-gradient(circle at 90% 10%, rgba(125, 211, 252, 0.18), transparent 32%),
+        radial-gradient(circle at 14% 85%, rgba(59, 130, 246, 0.14), transparent 32%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 5, 15, 0.95) 0%, rgba(0, 4, 12, 0.98) 52%, #00030a 72%, #000207 100%),
+        linear-gradient(180deg, var(--bg-top), #01071b 42%, var(--bg-bottom) 100%);
       overflow-x: hidden;
     }
 
-    @keyframes drift {
-      from { transform: translate3d(0,0,0); }
-      to { transform: translate3d(-10px, -6px, 0); }
+    /* Layered starfield */
+    .stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; mix-blend-mode: screen; background-repeat: repeat; }
+    .stars-far {
+      background-image:
+        radial-gradient(1px 1px at 14% 16%, rgba(255, 255, 255, 0.55), transparent 55%),
+        radial-gradient(1.2px 1.2px at 52% 48%, rgba(180, 212, 255, 0.5), transparent 60%),
+        radial-gradient(1.4px 1.4px at 78% 22%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(1px 1px at 26% 68%, rgba(148, 197, 255, 0.45), transparent 60%);
+      background-size: 420px 420px;
+      opacity: 0.55;
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.35));
+      animation: drift-slow 60s ease-in-out infinite alternate;
     }
+    .stars-near {
+      background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.9), transparent 62%),
+        radial-gradient(1.8px 1.8px at 80% 50%, rgba(96, 165, 250, 0.85), transparent 64%),
+        radial-gradient(2.2px 2.2px at 50% 70%, rgba(191, 219, 254, 0.9), transparent 64%),
+        radial-gradient(2.6px 2.6px at 30% 12%, rgba(255, 255, 255, 0.95), transparent 64%),
+        radial-gradient(1.6px 1.6px at 68% 82%, rgba(125, 211, 252, 0.75), transparent 62%);
+      background-size: 260px 260px;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.4));
+      animation: drift-fast 38s ease-in-out infinite alternate;
+    }
+    @keyframes drift-slow { from { transform: translate3d(0,0,0); } to { transform: translate3d(-18px, -10px, 0); } }
+    @keyframes drift-fast { from { transform: translate3d(6px, 6px, 0); } to { transform: translate3d(-16px, -12px, 0); } }
+    @keyframes drift { from { transform: translate3d(0,0,0); } to { transform: translate3d(-10px, -6px, 0); } }
 
     body::before,
     body::after {
@@ -58,15 +84,13 @@
       filter: blur(60px);
       opacity: 0.6;
     }
-
     body::before {
       top: -120px;
       left: -80px;
       width: 320px;
       height: 320px;
-      background: rgba(59, 130, 246, 0.18);
+      background: rgba(59, 130, 246, 0.14);
     }
-
     body::after {
       inset: 0;
       background-image:
@@ -86,101 +110,44 @@
     button, input, textarea { font: inherit; }
     .hidden { display: none !important; }
 
-    .app-shell {
-      position: relative;
-      z-index: 1;
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 56px;
-    }
-
-    .glass {
-      background: rgba(6, 18, 43, 0.72);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(20px);
-    }
+    .app-shell { position: relative; z-index: 1; width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 24px 0 56px; }
+    .glass { background: rgba(6, 18, 43, 0.72); border: 1px solid var(--border); box-shadow: var(--shadow); backdrop-filter: blur(20px); }
 
     #splash {
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      display: grid;
-      place-items: center;
+      position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
       background:
         radial-gradient(circle at 50% 40%, rgba(96, 165, 250, 0.16), transparent 20%),
         linear-gradient(180deg, #07162f, #020617);
-      animation: splash-fade 0.9s ease forwards;
-      animation-delay: 2.2s;
+      animation: splash-fade 0.9s ease forwards; animation-delay: 2.2s;
     }
-
-    .splash-mark {
-      display: grid;
-      gap: 18px;
-      justify-items: center;
-      text-align: center;
-      animation: splash-rise 1.8s ease;
-    }
-
+    .splash-mark { display: grid; gap: 18px; justify-items: center; text-align: center; animation: splash-rise 1.8s ease; }
     .logo-box, .brand-mark {
-      display: grid;
-      place-items: center;
-      font-family: var(--font-display);
+      display: grid; place-items: center; font-family: var(--font-display);
       background: linear-gradient(145deg, rgba(37, 99, 235, 0.35), rgba(30, 41, 59, 0.9));
       border: 1px solid rgba(191, 219, 254, 0.2);
       box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset, 0 0 70px rgba(37, 99, 235, 0.24);
     }
+    .logo-box { width: 126px; height: 126px; border-radius: 30px; font-size: 54px; }
+    .brand-mark { width: 46px; height: 46px; border-radius: 16px; font-size: 1.35rem; box-shadow: 0 12px 30px rgba(37, 99, 235, 0.22); }
+    .splash-copy, .helper-text, .field-hint, .response-meta, .mode-description, .empty-copy, footer, .brand-copy span, .topbar-status { color: var(--text-secondary); }
+    .splash-copy { letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.76rem; }
 
-    .logo-box {
-      width: 126px;
-      height: 126px;
-      border-radius: 30px;
-      font-size: 54px;
-    }
-
-    .brand-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      font-size: 1.35rem;
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.22);
-    }
-
-    .splash-copy, .helper-text, .field-hint, .response-meta, .mode-description, .empty-copy, footer, .brand-copy span, .topbar-status {
-      color: var(--text-secondary);
-    }
-
-    .splash-copy {
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      font-size: 0.76rem;
-    }
-
-    @keyframes splash-rise {
-      from { opacity: 0; transform: translateY(26px) scale(0.9); filter: blur(6px); }
-      60% { filter: blur(0px); }
-      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-    }
-
+    @keyframes splash-rise { from { opacity: 0; transform: translateY(26px) scale(0.9); filter: blur(6px); } 60% { filter: blur(0px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
     @keyframes splash-fade { to { opacity: 0; visibility: hidden; } }
     @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(96, 165, 250, 0); } 100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .topbar, .workspace-header, .result-header, footer {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    }
+    .topbar, .workspace-header, .result-header, footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .topbar { padding: 18px 22px; border-radius: 999px; margin-bottom: 28px; }
-
     .brand { display: flex; align-items: center; gap: 14px; }
     .brand-copy { display: grid; gap: 2px; }
-    .brand-copy strong, .hero-copy h1 { font-family: var(--font-display); font-weight: 600; }
+    .brand-copy strong, .hero-copy h1 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; }
     .topbar-status { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; white-space: nowrap; }
     .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--success); box-shadow: 0 0 18px rgba(52, 211, 153, 0.6); }
 
     .hero, .workspace-grid { display: grid; gap: 24px; align-items: start; }
     .hero { grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); margin-bottom: 24px; }
     .workspace-grid { grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr); }
-
     .hero-card, .workspace, .result-panel, .insight-card, .model-card, .empty-state, .section-card, .token-card { border-radius: var(--radius-xl); }
     .hero-card, .workspace, .result-panel { padding: 28px; }
     .hero-card { position: relative; overflow: hidden; }
@@ -195,19 +162,14 @@
 
     .hero-copy { position: relative; z-index: 1; max-width: 640px; }
     .eyebrow, .pulse-badge, .response-tag, .chip { border-radius: 999px; }
-
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
       background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.16);
       color: #dbeafe; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
     }
+    .hero-copy h1 { margin: 18px 0 14px; font-size: clamp(2.6rem, 5vw, 4.7rem); line-height: 0.98; }
 
-    .hero-copy h1 { margin: 18px 0 14px; font-size: clamp(2.6rem, 5vw, 4.7rem); line-height: 0.98; letter-spacing: -0.04em; }
-
-    .hero-copy p, .workspace-header p, .result-header p, .token-card p, .insight-card p, .model-card p, .model-card li, .section-card p {
-      margin: 0; line-height: 1.7;
-    }
-
+    .hero-copy p, .workspace-header p, .result-header p, .token-card p, .insight-card p, .model-card p, .model-card li, .section-card p { margin: 0; line-height: 1.7; }
     .hero-metrics, .stack-list, .mode-grid, .results-stack, .model-grid, .insight-grid { display: grid; gap: 14px; }
     .hero-metrics { margin-top: 26px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .mode-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 18px; }
@@ -229,7 +191,6 @@
     .mode-card, textarea, input[type="password"], .ghost-button, .primary-button, .secondary-button, .chip {
       transition: transform 160ms ease, opacity 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
     }
-
     .mode-card {
       padding: 18px; border-radius: 20px; border: 1px solid var(--border);
       background: rgba(255, 255, 255, 0.03); color: var(--text-primary); cursor: pointer;
@@ -260,7 +221,6 @@
     textarea::placeholder, input[type="password"]::placeholder { color: rgba(191, 219, 254, 0.42); }
 
     .textarea-wrap { position: relative; }
-
     .textarea-tools, .helper-row, .chips, .action-row, .token-row, .response-meta, .status-banner {
       display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
     }
@@ -273,7 +233,6 @@
       background: rgba(255, 255, 255, 0.05); color: var(--text-primary); border: 1px solid rgba(191, 219, 254, 0.14);
     }
     .ghost-button, .chip, .primary-button, .secondary-button { padding: 12px 14px; border-radius: 16px; cursor: pointer; }
-
     .primary-button {
       background: linear-gradient(135deg, #60a5fa, #2563eb 60%, #1d4ed8);
       color: white; border: 0; box-shadow: 0 16px 30px rgba(37, 99, 235, 0.28); font-weight: 600;
@@ -309,7 +268,6 @@
       .hero, .workspace-grid, .hero-metrics, .mode-grid, .insight-grid { grid-template-columns: 1fr; }
       .topbar { border-radius: 28px; }
     }
-
     @media (max-width: 720px) {
       .app-shell { width: min(100% - 18px, 100%); padding-top: 14px; }
       .topbar, .workspace-header, .result-header, footer { flex-direction: column; align-items: flex-start; }
@@ -321,10 +279,13 @@
   </style>
 </head>
 <body>
+  <div class="stars stars-far"></div>
+  <div class="stars stars-near"></div>
+
   <div id="splash">
     <div class="splash-mark">
       <div class="logo-box">V</div>
-      <div class="splash-copy">VEDA</div>
+      <div class="splash-copy">Veda</div>
     </div>
   </div>
 
@@ -333,23 +294,23 @@
       <div class="brand">
         <div class="brand-mark">V</div>
         <div class="brand-copy">
-          <strong>VEDA</strong>
-          <span>Powered by VEDA Engine</span>
+          <strong>Veda</strong>
+          <span>Powered by Veda Engine</span>
         </div>
       </div>
       <div class="topbar-status">
         <span class="status-dot"></span>
-        <span>VEDA live: multi-model orchestration ready</span>
+        <span>Veda live: multi-model orchestration ready</span>
       </div>
     </header>
 
     <section class="hero">
       <article class="hero-card glass">
         <div class="hero-copy">
-          <div class="eyebrow">VEDA for the curious</div>
-          <h1>VEDA unifies expert models so learners get clear, exam-ready answers.</h1>
+          <div class="eyebrow">Veda for the curious</div>
+          <h1>Veda unifies expert models so learners get clear, exam-ready answers.</h1>
           <p>
-            Built for students and deep thinkers: VEDA listens, orchestrates multiple AIs in parallel,
+            Built for students and deep thinkers: Veda listens, orchestrates multiple AIs in parallel,
             then distills the most reliable synthesis. When you feel stuck, come here first—and leave understanding, not guessing.
           </p>
           <div class="hero-metrics">
@@ -371,7 +332,7 @@
 
       <aside class="hero-card glass">
         <div>
-          <h2>VEDA Field Notes</h2>
+          <h2>Veda Field Notes</h2>
           <p class="helper-text">
             Built as a premium-facing layer: steady UX, mode-aware prompts, graceful fallbacks, and synthesis tuned for clarity and trust.
           </p>
@@ -397,9 +358,9 @@
       <main class="workspace glass">
         <div class="workspace-header">
           <div>
-            <h2>Ask VEDA</h2>
+            <h2>Ask Veda</h2>
             <p class="helper-text">
-              Ask, pick a mode, and VEDA will orchestrate multiple models in parallel, then return a calm, high-signal answer.
+              Ask, pick a mode, and Veda will orchestrate multiple models in parallel, then return a calm, high-signal answer.
             </p>
           </div>
           <div class="pulse-badge">Live orchestration preview</div>
@@ -460,7 +421,7 @@
         <div class="action-row">
           <button class="primary-button" type="button" id="askButton">Generate Answer</button>
           <button class="secondary-button" type="button" id="stopButton" disabled>Stop Request</button>
-          <span class="helper-text">VEDA stack: flan-t5-base + bart-large-cnn (parallel)</span>
+          <span class="helper-text">Veda stack: flan-t5-base + bart-large-cnn (parallel)</span>
         </div>
       </main>
 
@@ -477,7 +438,7 @@
         <div class="results-stack">
           <div class="status-banner" id="statusBanner">
             <div class="status-spinner"></div>
-            <span id="statusText">VEDA is orchestrating models and merging results...</span>
+            <span id="statusText">Veda is orchestrating models and merging results...</span>
           </div>
 
           <div class="empty-state" id="emptyState">
@@ -504,8 +465,8 @@
     </section>
 
     <footer>
-      <span>© 2026 VEDA. All rights reserved.</span>
-      <span>Powered by VEDA Engine</span>
+      <span>© 2026 Veda. All rights reserved.</span>
+      <span>Powered by Veda Engine</span>
     </footer>
   </div>
 
@@ -520,30 +481,13 @@
         verify: "Analyze the user request carefully and answer with explicit reasoning that can be checked for agreement or conflict."
       },
       modes: {
-        smart: {
-          label: "Smart Answer",
-          description: "Smart Answer combines multiple model responses into a cleaner, single final answer."
-        },
-        compare: {
-          label: "Compare",
-          description: "Compare keeps each model response visible so users can inspect differences directly."
-        },
-        verify: {
-          label: "Verify",
-          description: "Verify measures overlap and conflict signals, then produces a more cautious final summary."
-        }
+        smart: { label: "Smart Answer", description: "Smart Answer combines multiple model responses into a cleaner, single final answer." },
+        compare: { label: "Compare", description: "Compare keeps each model response visible so users can inspect differences directly." },
+        verify: { label: "Verify", description: "Verify measures overlap and conflict signals, then produces a more cautious final summary." }
       },
       models: [
-        {
-          name: "google/flan-t5-base",
-          provider: "Hugging Face",
-          endpoint: "https://api-inference.huggingface.co/models/google/flan-t5-base"
-        },
-        {
-          name: "facebook/bart-large-cnn",
-          provider: "Hugging Face",
-          endpoint: "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-        }
+        { name: "google/flan-t5-base", provider: "Hugging Face", endpoint: "https://api-inference.huggingface.co/models/google/flan-t5-base" },
+        { name: "facebook/bart-large-cnn", provider: "Hugging Face", endpoint: "https://api-inference.huggingface.co/models/facebook/bart-large-cnn" }
       ]
     };
 
@@ -574,9 +518,7 @@
         .replace(/'/g, "&#39;");
     }
 
-    function normalizeWhitespace(text) {
-      return text.replace(/\s+/g, " ").trim();
-    }
+    function normalizeWhitespace(text) { return text.replace(/\s+/g, " ").trim(); }
 
     function splitSentences(text) {
       return normalizeWhitespace(text)
@@ -589,9 +531,7 @@
       const seen = new Set();
       return sentences.filter((sentence) => {
         const key = sentence.toLowerCase();
-        if (seen.has(key)) {
-          return false;
-        }
+        if (seen.has(key)) return false;
         seen.add(key);
         return true;
       });
@@ -600,25 +540,15 @@
     function scoreOverlap(a, b) {
       const tokensA = new Set(a.toLowerCase().split(/\W+/).filter((word) => word.length > 3));
       const tokensB = new Set(b.toLowerCase().split(/\W+/).filter((word) => word.length > 3));
-
-      if (!tokensA.size || !tokensB.size) {
-        return 0;
-      }
-
+      if (!tokensA.size || !tokensB.size) return 0;
       let common = 0;
-      tokensA.forEach((word) => {
-        if (tokensB.has(word)) {
-          common += 1;
-        }
-      });
-
+      tokensA.forEach((word) => { if (tokensB.has(word)) common += 1; });
       return common / Math.max(tokensA.size, tokensB.size);
     }
 
     function extractText(data) {
       if (!data) return "";
       if (typeof data === "string") return normalizeWhitespace(data);
-
       if (Array.isArray(data)) {
         const item = data[0];
         if (!item) return "";
@@ -627,7 +557,6 @@
         if (item.summary_text) return normalizeWhitespace(item.summary_text);
         if (item.answer) return normalizeWhitespace(item.answer);
       }
-
       if (data.generated_text) return normalizeWhitespace(data.generated_text);
       if (data.summary_text) return normalizeWhitespace(data.summary_text);
       if (data.answer) return normalizeWhitespace(data.answer);
@@ -639,9 +568,7 @@
       return `${APP_STATE.prompts[mode]}\n\nUser request:\n${question}`;
     }
 
-    function getStoredToken() {
-      return window.localStorage.getItem(APP_STATE.tokenStorageKey) || "";
-    }
+    function getStoredToken() { return window.localStorage.getItem(APP_STATE.tokenStorageKey) || ""; }
 
     function updateTokenStatus() {
       const token = getStoredToken();
@@ -668,14 +595,8 @@
       elements.charCount.textContent = `${count} character${count === 1 ? "" : "s"}`;
     }
 
-    function showStatus(message) {
-      elements.statusText.textContent = message;
-      elements.statusBanner.classList.add("visible");
-    }
-
-    function hideStatus() {
-      elements.statusBanner.classList.remove("visible");
-    }
+    function showStatus(message) { elements.statusText.textContent = message; elements.statusBanner.classList.add("visible"); }
+    function hideStatus() { elements.statusBanner.classList.remove("visible"); }
 
     function setBusy(isBusy) {
       elements.askButton.disabled = isBusy;
@@ -691,10 +612,7 @@
       const response = await fetch(model.endpoint, {
         method: "POST",
         headers,
-        body: JSON.stringify({
-          inputs: prompt,
-          options: { wait_for_model: true, use_cache: false }
-        }),
+        body: JSON.stringify({ inputs: prompt, options: { wait_for_model: true, use_cache: false } }),
         signal
       });
 
@@ -709,7 +627,6 @@
         const fallbackError = data && data.error ? data.error : "Model returned an empty response.";
         throw new Error(`${model.name}: ${fallbackError}`);
       }
-
       return { model, text };
     }
 
@@ -717,6 +634,7 @@
       const primarySentences = splitSentences(textA);
       const secondarySentences = splitSentences(textB);
       const overlap = scoreOverlap(textA, textB);
+
       const shared = [];
       const uniquePrimary = [];
       const uniqueSecondary = [];
@@ -750,9 +668,7 @@
     }
 
     function getVerifyVerdict(overlap, differences) {
-      if (overlap >= 0.55 && differences <= 2) {
-        return { tone: "success", label: "Strong agreement detected across model outputs." };
-      }
+      if (overlap >= 0.55 && differences <= 2) return { tone: "success", label: "Strong agreement detected across model outputs." };
       return { tone: "warning", label: "Partial conflict detected. Treat the final answer as directional rather than fully verified." };
     }
 
@@ -760,12 +676,11 @@
       const { mode, synthesis, outputs, latencyMs } = result;
       const modeLabel = APP_STATE.modes[mode].label;
       const blocks = [];
+
       blocks.push(`
         <section class="section-card">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
-            <div>
-              <h3>${escapeHtml(modeLabel)} Final Answer</h3>
-            </div>
+            <div><h3>${escapeHtml(modeLabel)} Final Answer</h3></div>
             <div class="response-tag" style="margin-left:auto;">Relevance score: ${synthesis.score.toFixed(1)}/10</div>
           </div>
           <p>${escapeHtml(synthesis.finalAnswer)}</p>
@@ -796,7 +711,6 @@
           synthesis.uniquePrimary.length ? `Model A adds: ${synthesis.uniquePrimary.join(" ")}` : "Model A is closely aligned with the second model.",
           synthesis.uniqueSecondary.length ? `Model B adds: ${synthesis.uniqueSecondary.join(" ")}` : "Model B is closely aligned with the first model."
         ].join(" ");
-
         blocks.push(`
           <section class="section-card">
             <h3>Comparison Highlights</h3>
@@ -845,14 +759,12 @@
 
     async function askAI() {
       const question = elements.question.value.trim();
-      if (!question) {
-        renderError("Enter a prompt before generating an answer.");
-        return;
-      }
+      if (!question) { renderError("Enter a prompt before generating an answer."); return; }
 
       if (APP_STATE.requestController) APP_STATE.requestController.abort();
       const controller = new AbortController();
       APP_STATE.requestController = controller;
+
       const startedAt = performance.now();
       const prompt = getModePrompt(APP_STATE.mode, question);
 
@@ -883,16 +795,10 @@
     });
 
     elements.question.addEventListener("input", updateCharCount);
-    elements.clearPrompt.addEventListener("click", () => {
-      elements.question.value = "";
-      updateCharCount();
-      elements.question.focus();
-    });
+    elements.clearPrompt.addEventListener("click", () => { elements.question.value = ""; updateCharCount(); elements.question.focus(); });
 
     elements.askButton.addEventListener("click", askAI);
-    elements.stopButton.addEventListener("click", () => {
-      if (APP_STATE.requestController) APP_STATE.requestController.abort();
-    });
+    elements.stopButton.addEventListener("click", () => { if (APP_STATE.requestController) APP_STATE.requestController.abort(); });
 
     elements.question.addEventListener("keydown", (event) => {
       if ((event.ctrlKey || event.metaKey) && event.key === "Enter" && !elements.askButton.disabled) askAI();
